@@ -6,11 +6,13 @@ import java.util.List;
 
 import com.example.Languages.linguagens.model.Linguagem;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class LinguagemDto {
     
     String nome;
@@ -34,4 +36,7 @@ public class LinguagemDto {
         return dtos;
     }
 
+    public static LinguagemDto transformaEmDto(Linguagem linguagem) {
+    	return new LinguagemDto(linguagem);
+    }
 }

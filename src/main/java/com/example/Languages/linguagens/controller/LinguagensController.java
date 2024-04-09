@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Languages.linguagens.dto.LinguagemDto;
-import com.example.Languages.linguagens.model.Linguagem;
+
 
 @RestController
 @CrossOrigin
@@ -38,7 +38,7 @@ public class LinguagensController {
         @RequestParam("tipo")Optional<String>tipo
     ) {
 
-        List<LinguagemDto> linguagens = serviceLinguagem.retornaLinguagens(nome,tipo);
+        List<LinguagemDto> linguagens = serviceLinguagem.retornaLinguagens(pageable,nome,tipo);
          return new ResponseEntity<>(linguagens, HttpStatus.OK);
     }
 

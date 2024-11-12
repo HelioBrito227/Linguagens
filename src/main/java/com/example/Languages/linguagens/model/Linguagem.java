@@ -2,6 +2,8 @@ package com.example.Languages.linguagens.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,7 @@ public class Linguagem {
     @Column(name = "tipo")
     String tipo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "data_criacao")
     LocalDate dataCriacao;
 

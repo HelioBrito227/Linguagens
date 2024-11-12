@@ -1,0 +1,7 @@
+version: "2.28"
+sevices:
+	
+	db:
+		image: mysql
+	
+	

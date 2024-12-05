@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceLinguagem {
+public class LinguagemService {
 
 	private final RepositorioLinguagem repositorioLinguagem;
     private final LinguagemMapper linguagemMapper;
@@ -32,14 +32,20 @@ public class ServiceLinguagem {
 	public List<LinguagemDto> retornaLinguagens(Pageable pageable, Optional<String> nome, Optional<String> tipo, Optional<String>anoCriacao) {
   
         List<LinguagemDto> linguagensDto = new ArrayList<>();
-        Page<Linguagem> linguagens = null;
-        List<Linguagem> langs = new ArrayList<>();
+        
         
         if(anoCriacao.isPresent() && anoCriacao != null) {
-        	langs =  repositorioLinguagem.getLinguagensPorAno(anoCriacao);
+        	List<Linguagem> langs =  repositorioLinguagem.getLinguagensPorAno(anoCriacao);
+        	if(!langs.isEmpty()) {
+        		langs.forEach(ling ->{
+            		linguagensDto.add(linguagemMapper.toLinguagemDto(ling));
+            	});
+        		return linguagensDto;
+        	}
+        	
         }
         
-        linguagens = repositorioLinguagem.findAll(new Specification<Linguagem>() {
+       final Page<Linguagem> linguagens = repositorioLinguagem.findAll(new Specification<Linguagem>() {
         	@Override
         	public Predicate toPredicate(Root<Linguagem> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         		List<Predicate> predicates = new ArrayList<>();
@@ -78,4 +84,22 @@ public class ServiceLinguagem {
     public void deletaLinguagem(int sequencial) {
 
     }
+
+	public List<Integer> buscarAnos() {
+		List<Integer> anos = new ArrayList<Integer>();
+		List<Linguagem> linguagens = repositorioLinguagem.findAll();
+		for(Linguagem lang : linguagens) {
+			anos.add(lang.getDataCriacao().getYear());
+		}
+		return anos;
+	}
+
+	public List<String> buscarTipos() {
+		List<String> tipos = new ArrayList<String>();
+		List<Linguagem> linguagens = repositorioLinguagem.findAll();
+		for(Linguagem lang : linguagens) {
+			tipos.add(lang.getTipo());
+		}
+		return tipos;
+	}
 }

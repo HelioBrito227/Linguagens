@@ -7,5 +7,5 @@ public record LinguagemDto(
 		String tipo,
 		LocalDate dataCriacao,
 		String descricao
-		) {
-}
+		)
+{}

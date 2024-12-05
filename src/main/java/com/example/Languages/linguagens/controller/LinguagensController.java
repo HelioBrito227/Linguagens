@@ -2,7 +2,7 @@ package com.example.Languages.linguagens.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Languages.linguagens.service.ServiceLinguagem;
+import com.example.Languages.linguagens.service.LinguagemService;
 
 import lombok.AllArgsConstructor;
 
@@ -32,7 +32,7 @@ import com.example.Languages.linguagens.dto.LinguagemDto;
 public class LinguagensController {
 
     @Autowired
-    ServiceLinguagem serviceLinguagem;
+    LinguagemService linguagemService;
 
     @GetMapping("/todas")
     public ResponseEntity<List<LinguagemDto>> buscarLinguagens(
@@ -41,14 +41,26 @@ public class LinguagensController {
         @RequestParam("tipo")Optional<String>tipo,
         @RequestParam("ano")Optional<String>anoCriacao
     ) {
-        List<LinguagemDto> linguagens = serviceLinguagem.retornaLinguagens(pageable, nome, tipo, anoCriacao);
+        List<LinguagemDto> linguagens = linguagemService.retornaLinguagens(pageable, nome, tipo, anoCriacao);
          return new ResponseEntity<>(linguagens, HttpStatus.OK);
     }
     
     @PostMapping("/salvar")
     public ResponseEntity<?>salvarLinguagem(
     		@RequestBody LinguagemDto linguagem){
-    	serviceLinguagem.salvarLinguagem(linguagem);
+    	linguagemService.salvarLinguagem(linguagem);
     	 return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @GetMapping("/buscar_anos")
+    public ResponseEntity<List<Integer>> buscarAnos(){
+    	List<Integer>anos = linguagemService.buscarAnos();
+    	return new ResponseEntity<List<Integer>>(anos, HttpStatus.OK);
+    }
+    
+    @GetMapping("/buscar_tipos")
+    public ResponseEntity<List<String>> buscarTipos(){
+    	List<String>tipos = linguagemService.buscarTipos();
+    	return new ResponseEntity<List<String>>(tipos, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.Languages.linguagens.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,29 +32,22 @@ public class LinguagemService {
     @SuppressWarnings({ "serial" })
 	public List<LinguagemDto> retornaLinguagens(Pageable pageable, Optional<String> nome, Optional<String> tipo, Optional<String>anoCriacao) {
   
+    	System.out.println(nome + " " + tipo + " " + anoCriacao);
         List<LinguagemDto> linguagensDto = new ArrayList<>();
-        
-        
-        if(anoCriacao.isPresent() && anoCriacao != null) {
-        	List<Linguagem> langs =  repositorioLinguagem.getLinguagensPorAno(anoCriacao);
-        	if(!langs.isEmpty()) {
-        		langs.forEach(ling ->{
-            		linguagensDto.add(linguagemMapper.toLinguagemDto(ling));
-            	});
-        		return linguagensDto;
-        	}
-        	
-        }
-        
+                
        final Page<Linguagem> linguagens = repositorioLinguagem.findAll(new Specification<Linguagem>() {
         	@Override
         	public Predicate toPredicate(Root<Linguagem> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         		List<Predicate> predicates = new ArrayList<>();
         		if(nome.isPresent()) {
-        			predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("nome"),"%"+nome.get()+"%")));
+        			predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("nome"),"%"+nome.get()+"%")));
         		}
         		if(tipo.isPresent()) {
-        			predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("tipo"),"%"+tipo.get()+"%")));
+        			predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("tipo"), tipo.get())));
+        		}
+        		if(anoCriacao.isPresent()) {
+        			predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.<LocalDate>get("dataCriacao"), LocalDate.of(Integer.valueOf(anoCriacao.get()), 1, 1) ));
+        			predicates.add(criteriaBuilder.lessThanOrEqualTo(root.<LocalDate>get("dataCriacao"), LocalDate.of(Integer.valueOf(anoCriacao.get()), 12, 31) ));
         		}
         		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         	}

@@ -13,6 +13,7 @@ public class LinguagemMapper {
 	
     public LinguagemDto toLinguagemDto(Linguagem linguagem){
     	return new LinguagemDto(
+    			linguagem.getSequencial(),
     			linguagem.getNome(),
     			linguagem.getTipo(),
     			linguagem.getDataCriacao(),

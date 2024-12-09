@@ -96,4 +96,20 @@ public class LinguagemService {
 		}
 		return tipos;
 	}
+
+	public LinguagemDto buscarLinguagem(int idLinguagem) {
+		Optional<Linguagem> linguagem = repositorioLinguagem.findById(idLinguagem);
+		return linguagemMapper.toLinguagemDto(linguagem.get());
+	}
+
+	public void editarLinguagem(LinguagemDto linguagem) {
+		Linguagem linguagemEditada = new Linguagem();
+		linguagemEditada.setSequencial(linguagem.id());
+		linguagemEditada.setNome(linguagem.nome());
+		linguagemEditada.setTipo(linguagem.tipo());
+		linguagemEditada.setDescricao(linguagem.descricao());
+		linguagemEditada.setDataCriacao(linguagem.dataCriacao());
+		
+		repositorioLinguagem.save(linguagemEditada);
+	}
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Languages.linguagens.service.LinguagemService;
 
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +29,7 @@ import com.example.Languages.linguagens.dto.LinguagemDto;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/linguagem")
+@RequestMapping("/linguagens")
 @AllArgsConstructor
 public class LinguagensController {
 
@@ -44,11 +47,27 @@ public class LinguagensController {
          return new ResponseEntity<>(linguagens, HttpStatus.OK);
     }
     
+    @GetMapping("/linguagem")
+    public ResponseEntity<LinguagemDto> buscarLinguagem(
+    		@PathParam("idLinguagem") int idLinguagem
+    		){
+    	LinguagemDto linguagem = linguagemService.buscarLinguagem(idLinguagem);
+    	return new ResponseEntity<>(linguagem, HttpStatus.OK);
+    }
+    
     @PostMapping("/salvar")
     public ResponseEntity<?>salvarLinguagem(
     		@RequestBody LinguagemDto linguagem){
     	linguagemService.salvarLinguagem(linguagem);
     	 return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @PatchMapping("editar_linguagem")
+    public ResponseEntity<?>editarLinguagem(
+    		@RequestBody LinguagemDto linguagem){
+    	linguagemService.editarLinguagem(linguagem);
+		return new ResponseEntity<>(HttpStatus.OK);
+    	
     }
     
     @GetMapping("/buscar_anos")
